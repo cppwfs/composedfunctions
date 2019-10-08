@@ -3,12 +3,26 @@
 Sample application for showing function composition on a app starter source
 
 == Build
-mvn clean install
+mvn clean package
 
 == Test
-register `myhttp` from  	file:///Users/glennrenfro/presentations/s1p2019/samples/httpfun/target/httpfun-1.0.0.BUILD-SNAPSHOT.jar
-Deploy with property  `app.myhttp.spring.cloud.stream.function.definition=upper,suffix`
+1) Register the app `myhttp`  for example
+```
+app register myhttp --type task --uri file:///<location of your projectr>/target/httpfun-1.0.0.BUILD-SNAPSHOT.jar
+```
 
-Test with
+2) Create your stream
+```
+stream create mystream --definition "myhttp --port=9000 | log"
+```
 
-`curl -X POST http://localhost:9000 -H"Content-Type:text/plain" -d  helloworld`
+3) Deploy with property  `app.myhttp.spring.cloud.stream.function.definition=upper,suffix`
+For example:
+```
+stream deploy streamDemo1 --properties "app.myhttp.spring.cloud.stream.function.definition=upper,suffix"
+```
+
+4) Test with
+```
+curl -X POST http://localhost:9000 -H"Content-Type:text/plain" -d  helloworld
+```
